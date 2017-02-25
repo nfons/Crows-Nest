@@ -3,13 +3,9 @@ K8sDeployObject = {
     "kind": "Deployment",
     "metadata": {
         "name": "CHANGE",
+        "namespace": "default"
     },
     "spec": {
-        "selector": {
-            "matchLabels": {
-                "run": "CHANGE"
-            }
-        },
         "replicas": 1,
         "template": {
             "metadata": {
@@ -37,6 +33,7 @@ K8sIngressObject = {
     "kind": "Ingress",
     "metadata": {
         "name": "CHANGE",
+        "namespace": "default"
     },
     "spec": {
         "rules": [
@@ -59,10 +56,11 @@ K8sIngressObject = {
 }
 
 K8sSvcObject = {
-    "apiVersion": "extensions/v1beta1",
+    "apiVersion": "v1",
     "kind": "Service",
     "metadata": {
         "name": "CHANGE",
+        "namespace": "default"
     },
     "spec": {
         "type": "NodePort",
@@ -73,7 +71,7 @@ K8sSvcObject = {
             }
         ],
         "selector": {
-            "run": "CHANGE"
+            "app": "CHANGE"
         }
     }
 }
@@ -84,7 +82,6 @@ def createDeployObject(pod):
     deploy["metadata"]["name"] = pod["name"]
     deploy["spec"]["template"]["metadata"]["labels"]["app"] = pod["name"]
     deploy["spec"]["template"]["spec"]["containers"][0]["name"] = pod["name"]
-    deploy["spec"]["selector"]["matchLabels"]["run"] = pod["name"]
     deploy["spec"]["template"]["spec"]["containers"][0]["image"] = pod["image"]
     return deploy
 
@@ -101,4 +98,5 @@ def createIngressObject(pod):
 def createSvcObject(pod):
     svc = K8sSvcObject
     svc["metadata"]["name"] = pod["name"]
-    svc["spec"]["selector"]["run"] = pod["name"]
+    svc["spec"]["selector"]["app"] = pod["name"]
+    return svc
