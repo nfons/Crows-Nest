@@ -10,18 +10,32 @@ class kubecluster:
 
     def createDeploy(self):
         deploy = createDeployObject(self.pod)
-        pykube.ReplicationController(self.api, deploy).create()
+        pykube.Deployment(self.api, deploy).create()
         log.info('creating deploy')
 
     def createIngress(self):
+        ingress = createIngressObject(self.pod)
+        pykube.Ingress(self.api, ingress).create()
         log.info('creating ingress rules')
+
     def createSvc(self):
         log.info('creating service')
+        svc = createSvcObject(self.pod)
+        pykube.Service(self.api, svc).create()
+
     def deleteDeploy(self):
+        deploy = createDeployObject(self.pod)
+        pykube.Deployment(self.api, deploy).delete()
         log.info('deleting deploy')
+
     def deleteIngress(self):
+        ingress = createIngressObject(self.pod)
+        pykube.Ingress(self.api, ingress).delete()
         log.info('deleteing ingress')
+
     def deleteSvc(self):
+        svc = createSvcObject(self.pod)
+        pykube.Service(self.api, svc).delete()
         log.info('delete svc')
 '''
 Creates a kubernetes stack for a given svc pod.
@@ -36,7 +50,7 @@ create ingress-rules with dns
 '''
 
 def createStack(pod):
-    log.info('Creating k8s stack for : '+ pod.name)
+    log.info('Creating k8s stack for : '+ pod["name"])
 
 '''
 deletes k8s stack. useful when PR is merged
@@ -46,6 +60,6 @@ delete svc
 delete deploy
 '''
 def deleteStack(pod):
-    log.info('Deleting k8s stack for :' + pod.name)
+    log.info('Deleting k8s stack for :' + pod["name"])
 
 
