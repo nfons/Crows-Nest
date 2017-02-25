@@ -30,6 +30,33 @@ K8sDeployObject = {
     }
 }
 
+K8sIngressObject = {
+    "kind": "Ingress",
+    "apiVersion": "extensions/v1beta1",
+    "metadata": {
+        "name": "CHANGE",
+    },
+    "spec": {
+        "rules": [
+            {
+                "host": "CHANGE",
+                "http": {
+                    "paths": [
+                        {
+                            "path": "/",
+                            "backend": {
+                                "serviceName": "CHANGE",
+                                "servicePort": 8080
+                            }
+                        }
+                    ]
+                }
+            }
+        ]
+    }
+}
+
+
 def createDeployObject(pod):
     deploy = K8sDeployObject
     deploy["metadata"]["name"] = pod.name
@@ -37,11 +64,17 @@ def createDeployObject(pod):
     deploy["template"]["metadata"]["labels"]["app"] = pod.name
     deploy["spec"]["spec"]["containers"]["name"] = pod.name
     deploy["spec"]["spec"]["containers"]["image"] = pod.image
+    return deploy
+
 
 def createIngressObject(pod):
-    ingress = None
+    ingress = K8sIngressObject
+    ingress["metadata"]["name"] = pod.name
+    ingress["spec"]["rules"][0]["host"] = pod.host
+    ingress["spec"]["rules"][0]["http"]["paths"][0]["backend"]["serviceName"] = pod.name
+    return ingress
+
+
 
 def createSvcObject(pod):
     svc = None
-
-
