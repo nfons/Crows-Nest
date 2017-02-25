@@ -59,19 +59,19 @@ K8sIngressObject = {
 
 def createDeployObject(pod):
     deploy = K8sDeployObject
-    deploy["metadata"]["name"] = pod.name
-    deploy["spec"]["selector"]["app"] = pod.name
-    deploy["template"]["metadata"]["labels"]["app"] = pod.name
-    deploy["spec"]["spec"]["containers"]["name"] = pod.name
-    deploy["spec"]["spec"]["containers"]["image"] = pod.image
+    deploy["metadata"]["name"] = pod["name"]
+    deploy["spec"]["selector"]["app"] = pod["name"]
+    deploy["template"]["metadata"]["labels"]["app"] = pod["name"]
+    deploy["spec"]["spec"]["containers"]["name"] = pod["name"]
+    deploy["spec"]["spec"]["containers"]["image"] = pod["image"]
     return deploy
 
 
 def createIngressObject(pod):
     ingress = K8sIngressObject
-    ingress["metadata"]["name"] = pod.name
-    ingress["spec"]["rules"][0]["host"] = pod.host
-    ingress["spec"]["rules"][0]["http"]["paths"][0]["backend"]["serviceName"] = pod.name
+    ingress["metadata"]["name"] = pod["name"]
+    ingress["spec"]["rules"][0]["host"] = pod["host"]
+    ingress["spec"]["rules"][0]["http"]["paths"][0]["backend"]["serviceName"] = pod["name"]
     return ingress
 
 
