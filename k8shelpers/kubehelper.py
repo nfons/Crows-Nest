@@ -51,8 +51,12 @@ create k8s svc for deployment
 create ingress-rules with dns
 '''
 
-def createStack(pod):
+def createStack(pod, KUBE_CONF):
     log.info('Creating k8s stack for : '+ pod["name"])
+    k8s = kubecluster(pod, KUBE_CONF)
+    k8s.createDeploy()
+    k8s.createSvc()
+    k8s.createIngress()
 
 '''
 deletes k8s stack. useful when PR is merged
