@@ -77,12 +77,14 @@ K8sSvcObject = {
 }
 
 
-def createDeployObject(pod):
+def createDeployObject(pod, delete=False):
     deploy = K8sDeployObject
     deploy["metadata"]["name"] = pod["name"]
     deploy["spec"]["template"]["metadata"]["labels"]["app"] = pod["name"]
     deploy["spec"]["template"]["spec"]["containers"][0]["name"] = pod["name"]
     deploy["spec"]["template"]["spec"]["containers"][0]["image"] = pod["image"]
+    if delete:
+        deploy["spec"]["replicas"] = 0
     return deploy
 
 

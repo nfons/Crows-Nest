@@ -24,7 +24,9 @@ class kubecluster:
         pykube.Service(self.api, svc).create()
 
     def deleteDeploy(self):
-        deploy = createDeployObject(self.pod)
+        # we need to scale the pods to 0, since "delete" doesnt delete pods
+        deploy = createDeployObject(self.pod, True)
+        pykube.Deployment(self.api, deploy).update()
         pykube.Deployment(self.api, deploy).delete()
         log.info('deleting deploy')
 
