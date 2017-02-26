@@ -20,7 +20,8 @@ K8sDeployObject = {
                         "image": "CHANGE",
                         "ports": [
                             {"containerPort": 8080}
-                        ]
+                        ],
+                        "imagePullPolicy": "Always"
                     }
                 ]
             }
