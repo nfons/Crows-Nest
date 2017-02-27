@@ -65,7 +65,11 @@ delete ingress
 delete svc
 delete deploy
 '''
-def deleteStack(pod):
+def deleteStack(pod, KUBE_CONF):
     log.info('Deleting k8s stack for :' + pod["name"])
+    k8s = kubecluster(pod, KUBE_CONF)
+    k8s.deleteIngress()
+    k8s.deleteSvc()
+    k8s.deleteDeploy()
 
 

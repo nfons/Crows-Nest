@@ -41,6 +41,7 @@ def opened(branch):
     changes1 = change_set.add_change("UPSERT", branch + '.' + DNS, type="A", ttl=3000)
     changes1.add_value(NODE_IP)
     change_set.commit()
+    # need to change the pod stuff to be a bit more dynamic...
     pod = {
         "name": branch,
         "image": 'natefons/test-app',
@@ -76,7 +77,3 @@ def healthz():
 
 if __name__ == "__main__":
     app.run()
-    pod = {
-        "name": "hello-minikube",
-        "image": "gcr.io/google_containers/echoserver:1.4"
-    }
