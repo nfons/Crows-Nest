@@ -79,7 +79,7 @@ K8sSvcObject = {
 
 
 def createDeployObject(pod, delete=False):
-    deploy = K8sDeployObject
+    deploy = K8sDeployObject.copy()
     deploy["metadata"]["name"] = pod["name"]
     deploy["spec"]["template"]["metadata"]["labels"]["app"] = pod["name"]
     deploy["spec"]["template"]["spec"]["containers"][0]["name"] = pod["name"]
@@ -90,7 +90,7 @@ def createDeployObject(pod, delete=False):
 
 
 def createIngressObject(pod):
-    ingress = K8sIngressObject
+    ingress = K8sIngressObject.copy()
     ingress["metadata"]["name"] = pod["name"]
     ingress["spec"]["rules"][0]["host"] = pod["host"]
     ingress["spec"]["rules"][0]["http"]["paths"][0]["backend"]["serviceName"] = pod["name"]
