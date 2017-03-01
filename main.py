@@ -12,7 +12,6 @@ NODE_IP = os.environ['CROW_NODE_IP']  # need to get from k8s secret later
 AWS_REGION = os.getenv('AWS_REGION', 'us-west-2')
 app = Flask(__name__)
 conn = boto.route53.connect_to_region(AWS_REGION)
-change_set = ResourceRecordSets(conn, ZONE_ID)
 KUBE_CONF = os.getenv('KUBECONF', "")
 
 
@@ -38,6 +37,7 @@ def opened(branch):
      then we will need to create a svc for it + ingress rules
      finally create a r53 record
     '''
+    change_set = ResourceRecordSets(conn, ZONE_ID)
     changes1 = change_set.add_change("UPSERT", branch + '.' + DNS, type="A", ttl=3000)
     changes1.add_value(NODE_IP)
     change_set.commit()
@@ -56,18 +56,19 @@ def closed(branch):
     We will need to get ingress, and then remove the ingress rule for this dns.
     delete deployments from this branch, as well as remove r53 record
     '''
+    change_set = ResourceRecordSets(conn, ZONE_ID)
     changes1 = change_set.add_change("DELETE", branch + '.' + DNS, type="A", ttl=3000)
     changes1.add_value(NODE_IP)
     change_set.commit()
 
     pod = {
         "name": branch,
-        "image": branch,
+        "image": 'natefons/test-app',
         "host": branch + '.' + DNS
     }
 
     # runs through the create stack process
-    deleteStack(pod)
+    deleteStack(pod, KUBE_CONF)
 
 
 @app.route('/healthCheck')

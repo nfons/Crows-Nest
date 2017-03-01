@@ -9,7 +9,7 @@ class kubecluster:
         self.api = pykube.HTTPClient(pykube.KubeConfig.from_file(KUBE_CONF))
 
     def createDeploy(self):
-        deploy = createDeployObject(self.pod)
+        deploy = createDeployObject(self.pod, False)
         pykube.Deployment(self.api, deploy).create()
         log.info('creating deploy')
 
