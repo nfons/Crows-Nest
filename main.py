@@ -10,6 +10,7 @@ ZONE_ID = os.environ['CROW_ZONE_ID']  # k8s secret later
 DNS = os.environ['CROW_DNS']  # need to get from secret later
 NODE_IP = os.environ['CROW_NODE_IP']  # need to get from k8s secret later
 AWS_REGION = os.getenv('AWS_REGION', 'us-west-2')
+CROW_REGISTRY = os.getenv('CROW_REGISTRY', None)
 app = Flask(__name__)
 conn = boto.route53.connect_to_region(AWS_REGION)
 KUBE_CONF = os.getenv('KUBECONF', "")
@@ -20,9 +21,10 @@ def main():
     data = request.json
     branch = data["object_attributes"]["source_branch"]
     action = data["object_attributes"]["state"]
+    image = data["object_attributes"]["source"]["path_with_namespace"];
     if action == 'opened' or action == 'reopened':
         log.info('PR opened, creating DNS records + k8s deploy for branch' + branch)
-        opened(branch)
+        opened(branch, image)
     elif action == 'closed':
         log.info('PR closed, deleting DNS records + k8s deploy for branch' + branch)
         closed(branch)
@@ -31,7 +33,7 @@ def main():
     return 'OK'
 
 
-def opened(branch):
+def opened(branch, image):
     '''
      We will 1st need to create a deployment with branch image
      then we will need to create a svc for it + ingress rules
@@ -44,9 +46,13 @@ def opened(branch):
     # need to change the pod stuff to be a bit more dynamic...
     pod = {
         "name": branch,
-        "image": 'natefons/test-app',
         "host": branch + '.' + DNS
     }
+
+    if (CROW_REGISTRY == None):
+        pod['image'] = image + ':' + branch
+    else:
+        pod['image'] = CROW_REGISTRY + image + ':' + branch
     # runs through the create stack process
     createStack(pod, KUBE_CONF)
 
@@ -63,7 +69,7 @@ def closed(branch):
 
     pod = {
         "name": branch,
-        "image": 'natefons/test-app',
+        "image": 'none',  # dont need image here for deletion
         "host": branch + '.' + DNS
     }
 
@@ -76,5 +82,10 @@ def healthz():
     return "OK"
 
 
+@app.route('/getProjects')
+def getProjects():
+    return 'OK'
+
+
 if __name__ == "__main__":
-    app.run()
+    app.run(host='0.0.0.0')
