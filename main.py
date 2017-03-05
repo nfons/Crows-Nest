@@ -3,6 +3,7 @@ from flask import request
 import logging as log
 import boto.route53
 import os
+from repo_parser import getRepo
 from boto.route53.record import ResourceRecordSets
 from k8shelpers.kubehelper import kubecluster, createStack, deleteStack
 
@@ -14,22 +15,21 @@ CROW_REGISTRY = os.getenv('CROW_REGISTRY', None)
 app = Flask(__name__)
 conn = boto.route53.connect_to_region(AWS_REGION)
 KUBE_CONF = os.getenv('KUBECONF', "")
+CROW_REPO = os.getenv("CROW_REPO", "gitlab")
 
 
 @app.route('/', methods=['POST'])
 def main():
     data = request.json
-    branch = data["object_attributes"]["source_branch"]
-    action = data["object_attributes"]["state"]
-    image = data["object_attributes"]["source"]["path_with_namespace"];
-    if action == 'opened' or action == 'reopened':
-        log.info('PR opened, creating DNS records + k8s deploy for branch' + branch)
-        opened(branch, image)
-    elif action == 'closed':
-        log.info('PR closed, deleting DNS records + k8s deploy for branch' + branch)
-        closed(branch)
-    elif action == 'updated':
-        log.info('PR has been updated, updating deployment' + branch)
+    parsed_data = getRepo(CROW_REPO, data)
+    if parsed_data['action'] == 'opened' or parsed_data['action'] == 'reopened':
+        log.info('PR opened, creating DNS records + k8s deploy for branch' + parsed_data['branch'])
+        opened(parsed_data['branch'], parsed_data['image'])
+    elif parsed_data['action'] == 'closed':
+        log.info('PR closed, deleting DNS records + k8s deploy for branch' + parsed_data['branch'])
+        closed(parsed_data['branch'])
+    elif parsed_data['action'] == 'updated':
+        log.info('PR has been updated, updating deployment' + parsed_data['branch'])
     return 'OK'
 
 
