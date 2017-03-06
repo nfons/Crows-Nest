@@ -1,0 +1,27 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: crows-nest
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: crows-nest
+    spec:
+      containers:
+      - name: crows-nest
+        image: natefons/crows-nest:latest
+        env:
+        - name: CROW_REPO
+          value: either gitlab (default) / github
+        - name: CROW_ZONE_ID
+          value: YOUR AWS R53 ZONE ID
+        - name: CROW_DNS
+          value: BASE DNS for route 53
+        - name: AWS_ACCESS_KEY_ID
+          value: AWS KEY from IAM
+        - name: AWS_SECRET_ACCESS_KEY
+          value: AWS SECRET FROM IAM
+        - name: CROW_NODE_IP
+          value: AN IP OF A NODE IN K8s
