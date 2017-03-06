@@ -10,6 +10,12 @@ def gitlab(payload):
 
 def github(payload):
     object = {}
+    branch = payload['head']["ref"]
+    image = payload["repository"]["full_name"]
+    action = payload["action"]
+    object["image"] = image
+    object["action"] = action
+    object["branch"] = branch
     return object
 
 def getRepo(type, payload):
