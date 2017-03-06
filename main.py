@@ -12,11 +12,11 @@ DNS = os.environ['CROW_DNS']  # need to get from secret later
 NODE_IP = os.environ['CROW_NODE_IP']  # need to get from k8s secret later
 AWS_REGION = os.getenv('AWS_REGION', 'us-west-2')
 CROW_REGISTRY = os.getenv('CROW_REGISTRY', None)
-app = Flask(__name__)
-conn = boto.route53.connect_to_region(AWS_REGION)
-KUBE_CONF = os.getenv('KUBECONF', "")
+KUBE_CONF = os.getenv('KUBECONF', None)
 CROW_REPO = os.getenv("CROW_REPO", "gitlab")
 
+app = Flask(__name__)
+conn = boto.route53.connect_to_region(AWS_REGION)
 
 @app.route('/', methods=['POST'])
 def main():

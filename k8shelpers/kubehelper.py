@@ -6,7 +6,10 @@ from k8shelpers.kubeobjects import *
 class kubecluster:
     def __init__(self, pod, KUBE_CONF):
         self.pod = pod
-        self.api = pykube.HTTPClient(pykube.KubeConfig.from_file(KUBE_CONF))
+        if KUBE_CONF != None:
+            self.api = pykube.HTTPClient(pykube.KubeConfig.from_file(KUBE_CONF))
+        else:
+            self.api = pykube.HTTPClient(pykube.KubeConfig.from_service_account())
 
     def createDeploy(self):
         deploy = createDeployObject(self.pod, False)
