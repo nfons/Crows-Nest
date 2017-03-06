@@ -1,4 +1,4 @@
-FROM jfloff/alpine-python:2.7-slim
+FROM python:3.6-slim
 MAINTAINER Nate Fonseka
 COPY . /app
 WORKDIR /app
