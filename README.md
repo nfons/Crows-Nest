@@ -11,7 +11,7 @@ Crows Nest will:
 
 ### Requirements
 
-* Kubernetes Cluster
+* Kubernetes Cluster With [Ingress set up](https://github.com/kubernetes/ingress)
 * Github/Gitlab (default)
 * AWS Route53 (currently only supporting AWS)
 
@@ -36,11 +36,29 @@ for the url, choose `{node_ip}:{node_port}` of you crows-nest deployment. set me
 
 Congrats! you now have a working crows-nest.
 
+## Environment Variables
+1. **CROW_REPO**
+ * Either "gitlab" (default) or "github". Tells which payload parser to use.
+2. **CROW_ZONE_ID**
+    * Route53 zone id. can get this from r53 url
+3. **CROW_DNS**
+ * base url for r53. i.e if your registered dns is "dev.example.com"
+
+4. **AWS_ACCESS_KEY_ID**
+ * get from AWS IAM
+5. **AWS_SECRET_ACCESS_KEY**
+ * get from AWS IAM
+6. **AWS_REGION**
+ * cluster region: defaults to us-west-2
+7. **KUBECONF**
+ * Location for kube.conf. REQUIRED if not running inside k8s cluster.
+8. **CROW_NODE_IP**
+ * IP of the node with an ingress service.
 
 ## Limitations
 1. Currently for docker regisry / VCS integration, the namespaces are tightly coupled.
  * that means: if your github repo is `username/reponame`, the docker registry has to also be in the namespace of `username/reponame`
-2. Only 1 Node IP is used for the Route53 dns IP.
+2. Only 1 Node IP is used for the Route53 dns IP. ideally you want ingress to be a daemon set
 
 
 
