@@ -18,13 +18,13 @@ def gitlab(payload):
 
 def github(payload):
     object = {}
-    branch = payload['head']["ref"]
+    branch = payload['pull_request']['head']["ref"]
     image = payload["repository"]["full_name"]
     action = payload["action"]
     object["image"] = image
     object["action"] = action
     object["branch"] = branch
-    object["comment_url"] = payload['comments_url']
+    object["comment_url"] = payload['pull_request']['comments_url']
     return object
 
 

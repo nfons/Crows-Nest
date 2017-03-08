@@ -1,8 +1,10 @@
 from flask import Flask
 from flask import request
 import logging as log
+import sys
 import boto.route53
 import os
+from commentModule import comment
 from repo_parser import getRepo
 from boto.route53.record import ResourceRecordSets
 from k8shelpers.kubehelper import kubecluster, createStack, deleteStack
@@ -13,7 +15,17 @@ NODE_IP = os.environ['CROW_NODE_IP']  # need to get from k8s secret later
 AWS_REGION = os.getenv('AWS_REGION', 'us-west-2')
 CROW_REGISTRY = os.getenv('CROW_REGISTRY', None)
 KUBE_CONF = os.getenv('KUBECONF', None)
-CROW_REPO = os.getenv("CROW_REPO", "gitlab")
+CROW_REPO = os.getenv("CROW_REPO", "github")
+
+
+root = log.getLogger()
+root.setLevel(log.INFO)
+
+ch = log.StreamHandler(sys.stdout)
+ch.setLevel(log.DEBUG)
+formatter = log.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+ch.setFormatter(formatter)
+root.addHandler(ch)
 
 app = Flask(__name__)
 conn = boto.route53.connect_to_region(AWS_REGION)
@@ -22,9 +34,11 @@ conn = boto.route53.connect_to_region(AWS_REGION)
 def main():
     data = request.json
     parsed_data = getRepo(CROW_REPO, data)
+    parsed_data['url'] = parsed_data['branch'] + '.' + DNS
     if parsed_data['action'] == 'opened' or parsed_data['action'] == 'reopened':
         log.info('PR opened, creating DNS records + k8s deploy for branch' + parsed_data['branch'])
         opened(parsed_data['branch'], parsed_data['image'])
+        comment(parsed_data)
     elif parsed_data['action'] == 'closed':
         log.info('PR closed, deleting DNS records + k8s deploy for branch' + parsed_data['branch'])
         closed(parsed_data['branch'])
@@ -89,3 +103,4 @@ def getProjects():
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0')
+    log.info('Crows Nest Running')
