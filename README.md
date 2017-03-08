@@ -58,7 +58,7 @@ Congrats! you now have a working crows-nest.
 1. Currently for docker regisry / VCS integration, the namespaces are tightly coupled.
  * that means: if your github repo is `username/reponame`, the docker registry has to also be in the namespace of `username/reponame`
 2. Only 1 Node IP is used for the Route53 dns IP. ideally you want ingress to be a daemon set
-
+3. Only port 8080 is exposed...will change this later
 
 
 
