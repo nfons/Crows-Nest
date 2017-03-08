@@ -12,7 +12,7 @@ Crows Nest will:
 ### Requirements
 
 * Kubernetes Cluster With [Ingress set up](https://github.com/kubernetes/ingress)
-* Github/Gitlab (default)
+* Github (default) /Gitlab
 * AWS Route53 (currently only supporting AWS)
 
 ## Get started
@@ -38,12 +38,11 @@ Congrats! you now have a working crows-nest.
 
 ## Environment Variables
 1. **CROW_REPO**
- * Either "gitlab" (default) or "github". Tells which payload parser to use.
+ * Either "gitlab" or "github" (default). Tells which payload parser to use.
 2. **CROW_ZONE_ID**
     * Route53 zone id. can get this from r53 url
 3. **CROW_DNS**
  * base url for r53. i.e if your registered dns is "dev.example.com"
-
 4. **AWS_ACCESS_KEY_ID**
  * get from AWS IAM
 5. **AWS_SECRET_ACCESS_KEY**
