@@ -84,6 +84,7 @@ def createDeployObject(pod, delete=False):
     deploy["spec"]["template"]["metadata"]["labels"]["app"] = pod["name"]
     deploy["spec"]["template"]["spec"]["containers"][0]["name"] = pod["name"]
     deploy["spec"]["template"]["spec"]["containers"][0]["image"] = pod["image"]
+    deploy["spec"]["template"]["spec"]["containers"][0]["ports"][0]["containerPort"] = pod["port"]
     if delete:
         deploy["spec"]["replicas"] = 0
     return deploy
@@ -94,6 +95,7 @@ def createIngressObject(pod):
     ingress["metadata"]["name"] = pod["name"]
     ingress["spec"]["rules"][0]["host"] = pod["host"]
     ingress["spec"]["rules"][0]["http"]["paths"][0]["backend"]["serviceName"] = pod["name"]
+    ingress["spec"]["rules"][0]["http"]["paths"][0]["backend"]["servicePort"] = pod["port"]
     return ingress
 
 
@@ -102,4 +104,6 @@ def createSvcObject(pod):
     svc = K8sSvcObject
     svc["metadata"]["name"] = pod["name"]
     svc["spec"]["selector"]["app"] = pod["name"]
+    svc["spec"]["ports"][0]["port"] = pod["port"]
+    svc["spec"]["ports"][0]["targetPort"] = pod["port"]
     return svc
