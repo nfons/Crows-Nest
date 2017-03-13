@@ -17,7 +17,6 @@ CROW_REGISTRY = os.getenv('CROW_REGISTRY', None)
 KUBE_CONF = os.getenv('KUBECONF', None)
 CROW_REPO = os.getenv("CROW_REPO", "github")
 
-
 root = log.getLogger()
 root.setLevel(log.INFO)
 
@@ -30,24 +29,25 @@ root.addHandler(ch)
 app = Flask(__name__)
 conn = boto.route53.connect_to_region(AWS_REGION)
 
+
 @app.route('/', methods=['POST'])
 def main():
     data = request.json
-    parsed_data = getRepo(CROW_REPO, data)
+    parsed_data = getRepo(CROW_REPO, data, request.headers)
     parsed_data['url'] = parsed_data['branch'] + '.' + DNS
     if parsed_data['action'] == 'opened' or parsed_data['action'] == 'reopened':
         log.info('PR opened, creating DNS records + k8s deploy for branch' + parsed_data['branch'])
-        opened(parsed_data['branch'], parsed_data['image'])
+        opened(parsed_data['branch'], parsed_data['image'], parsed_data['port'])
         comment(parsed_data)
     elif parsed_data['action'] == 'closed':
         log.info('PR closed, deleting DNS records + k8s deploy for branch' + parsed_data['branch'])
-        closed(parsed_data['branch'])
+        closed(parsed_data['branch'], parsed_data['port'])
     elif parsed_data['action'] == 'updated':
         log.info('PR has been updated, updating deployment' + parsed_data['branch'])
     return 'OK'
 
 
-def opened(branch, image):
+def opened(branch, image, port=8080):
     '''
      We will 1st need to create a deployment with branch image
      then we will need to create a svc for it + ingress rules
@@ -60,7 +60,8 @@ def opened(branch, image):
     # need to change the pod stuff to be a bit more dynamic...
     pod = {
         "name": branch,
-        "host": branch + '.' + DNS
+        "host": branch + '.' + DNS,
+        "port": port
     }
 
     if (CROW_REGISTRY == None):
@@ -71,7 +72,7 @@ def opened(branch, image):
     createStack(pod, KUBE_CONF)
 
 
-def closed(branch):
+def closed(branch, port=8080):
     '''
     We will need to get ingress, and then remove the ingress rule for this dns.
     delete deployments from this branch, as well as remove r53 record
@@ -84,7 +85,8 @@ def closed(branch):
     pod = {
         "name": branch,
         "image": 'none',  # dont need image here for deletion
-        "host": branch + '.' + DNS
+        "host": branch + '.' + DNS,
+        "port": port
     }
 
     # runs through the create stack process
