@@ -26,7 +26,7 @@ def github(payload, header):
     object["action"] = action
     object["branch"] = branch
     object["comment_url"] = payload['pull_request']['comments_url']
-    object['port'] = header['X-Github-Token']
+    object['port'] = header['X-Hub-Signature']
     return object
 
 
