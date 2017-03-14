@@ -17,14 +17,14 @@ def comment(data):
 
 def github_comment(data):
     payload = {
-        "body": '[' + data['url'] + ']' + '(' + data['url'] + ')'
+        "body": '[' + data['url'] + ']' + '(http://' + data['url'] + ')'
     }
     requests.post(data['comment_url'], data=json.dumps(payload), auth=HTTPBasicAuth(GIT_USER, GIT_PASS))
 
 
 def gitlab_comment(data):
     payload = {
-        "body": '[' + data['url'] + ']' + '(' + data['url'] + ')'
+        "body": '[' + data['url'] + ']' + '(http://' + data['url'] + ')'
     }
     headers = {}
     requests.post(data['comment_url'], data=json.dumps(payload), headers=headers)
