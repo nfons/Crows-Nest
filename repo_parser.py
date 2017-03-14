@@ -1,4 +1,4 @@
-def gitlab(payload, header):
+def gitlab(payload):
     object = {}
     branch = payload["object_attributes"]["source_branch"]
     action = payload["object_attributes"]["state"]
@@ -13,11 +13,10 @@ def gitlab(payload, header):
     project_id = payload["object_attributes"]["target_project_id"]
     url = base_url + '/projects/' + project_id + '/merge_requests/' + merge_request_id + '/notes'
     object['comment_url'] = url
-    object['port'] = header['X-Gitlab-Token']
     return object
 
 
-def github(payload, header):
+def github(payload):
     object = {}
     branch = payload['pull_request']['head']["ref"]
     image = payload["repository"]["full_name"]
@@ -26,12 +25,11 @@ def github(payload, header):
     object["action"] = action
     object["branch"] = branch
     object["comment_url"] = payload['pull_request']['comments_url']
-    object['port'] = header['X-Hub-Signature']
     return object
 
 
-def getRepo(type, payload, header):
+def getRepo(type, payload):
     if type == 'github':
-        return github(payload, header)
+        return github(payload)
     else:
-        return gitlab(payload, header)
+        return gitlab(payload)

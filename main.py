@@ -8,6 +8,7 @@ from commentModule import comment
 from repo_parser import getRepo
 from boto.route53.record import ResourceRecordSets
 from k8shelpers.kubehelper import kubecluster, createStack, deleteStack
+import json
 
 ZONE_ID = os.environ['CROW_ZONE_ID']  # k8s secret later
 DNS = os.environ['CROW_DNS']  # need to get from secret later
@@ -16,6 +17,7 @@ AWS_REGION = os.getenv('AWS_REGION', 'us-west-2')
 CROW_REGISTRY = os.getenv('CROW_REGISTRY', None)
 KUBE_CONF = os.getenv('KUBECONF', None)
 CROW_REPO = os.getenv("CROW_REPO", "github")
+PROJECT_PORTS = {}
 
 root = log.getLogger()
 root.setLevel(log.INFO)
@@ -33,8 +35,15 @@ conn = boto.route53.connect_to_region(AWS_REGION)
 @app.route('/', methods=['POST'])
 def main():
     data = request.json
-    parsed_data = getRepo(CROW_REPO, data, request.headers)
+    parsed_data = getRepo(CROW_REPO, data)
     parsed_data['url'] = parsed_data['branch'] + '.' + DNS
+
+    # if the default port is something different, we need to change it.
+    if parsed_data['image'] in PROJECT_PORTS:
+        parsed_data['port'] = PROJECT_PORTS[parsed_data['image']]
+    else:
+        parsed_data['port'] = 8080
+
     if parsed_data['action'] == 'opened' or parsed_data['action'] == 'reopened':
         log.info('PR opened, creating DNS records + k8s deploy for branch' + parsed_data['branch'])
         opened(parsed_data['branch'], parsed_data['image'], parsed_data['port'])
@@ -100,7 +109,14 @@ def healthz():
 
 @app.route('/getProjects')
 def getProjects():
-    return 'OK'
+    return json.dumps(PROJECT_PORTS)
+
+
+@app.route('/setProjects', methods=['POST'])
+def setProjects():
+    data = request.json
+    PROJECT_PORTS.update(data)
+    return json.dumps(PROJECT_PORTS)
 
 
 if __name__ == "__main__":
