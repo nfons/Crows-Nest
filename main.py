@@ -63,7 +63,7 @@ def opened(branch, image, port=8080):
      finally create a r53 record
     '''
     change_set = ResourceRecordSets(conn, ZONE_ID)
-    changes1 = change_set.add_change("UPSERT", branch + '.' + DNS, type="A", ttl=3000)
+    changes1 = change_set.add_change("UPSERT", branch + '.' + DNS, type="A", ttl=60)
     changes1.add_value(NODE_IP)
     change_set.commit()
     # need to change the pod stuff to be a bit more dynamic...
@@ -87,7 +87,7 @@ def closed(branch, port=8080):
     delete deployments from this branch, as well as remove r53 record
     '''
     change_set = ResourceRecordSets(conn, ZONE_ID)
-    changes1 = change_set.add_change("DELETE", branch + '.' + DNS, type="A", ttl=3000)
+    changes1 = change_set.add_change("DELETE", branch + '.' + DNS, type="A", ttl=60)
     changes1.add_value(NODE_IP)
     change_set.commit()
 
