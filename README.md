@@ -53,6 +53,10 @@ Congrats! you now have a working crows-nest.
  * Location for kube.conf. REQUIRED if not running inside k8s cluster.
 8. **CROW_NODE_IP**
  * IP of the node with an ingress service.
+9. **GIT_USER** (optional)
+ * Git bot account username
+10. **GIT_PASS** (optional)
+ * Git bot account access token
 
 ## Limitations
 1. Currently for docker regisry / VCS integration, the namespaces are tightly coupled.
