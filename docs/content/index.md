@@ -1,5 +1,4 @@
 ---
-date: 2017-03-08T21:07:13+01:00
 title: Crows Nest
 type: index
 weight: 9

@@ -29,6 +29,7 @@ You should now see crows-nest deployment, and a service running on a NodePort. w
 
 >kubectl get svc crows-nest
 
+![](https://cdn-images-1.medium.com/max/1600/1*rfFLOND5BZlFSiiY3P_ZnQ.png)
 
 >curl {YOUR_NODE_IP}:{NODE_PORT}/healthCheck
 
@@ -37,7 +38,7 @@ You should now see crows-nest deployment, and a service running on a NodePort. w
 **Congrats! you now have Crows-nest Running!**
 
 ## Configure Git Webhook
-You can follow the guide for setting up the webhook [for GitHub Here]() or [gitlab here]()
+You can follow the guide for setting up the webhook [for GitHub Here](https://support.hockeyapp.net/kb/third-party-bug-trackers-services-and-webhooks/how-to-set-up-a-webhook-in-github) or [gitlab here](https://docs.gitlab.com/ce/user/project/integrations/webhooks.html)
 {{<note title="Note">}}the payload url should be {YOUR_NODE_IP}:{NODE_PORT}
 
 example: http://123.45.67:31250{{</note>}}

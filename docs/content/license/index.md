@@ -1,6 +1,6 @@
 ---
 title: License
-weight: 11
+weight: 12
 ---
 
 # GNU GENERAL PUBLIC LICENSE
