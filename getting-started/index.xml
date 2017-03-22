@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Getting-starteds on Crows Nest</title>
+    <link>https://lilnate22.github.io/getting-started/index.xml</link>
+    <description>Recent content in Getting-starteds on Crows Nest</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>Released under the GPLv3 license</copyright>
+    <atom:link href="https://lilnate22.github.io/getting-started/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Getting Started</title>
+      <link>https://lilnate22.github.io/getting-started/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://lilnate22.github.io/getting-started/</guid>
+      <description>
+
+&lt;h2 id=&#34;pre-requisites&#34;&gt;Pre Requisites&lt;/h2&gt;
+
+&lt;ol&gt;
+&lt;li&gt;AWS account with IAM set up. you will need the key + secret from IAM&lt;/li&gt;
+&lt;li&gt;A Kubernetes Cluster. (kops , kubeadm or plain ol minikube) + general understanding of getting around K8s.&lt;/li&gt;
+&lt;li&gt;Ingress set up in your cluster + AWS Route53  DNS pointing to your cluster&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;only if using kubeadm&lt;/em&gt; SSH into the machine with kubectl set up&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;optional&lt;/em&gt; a “bot” github account with personal access token set up&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2 id=&#34;get-the-code&#34;&gt;Get the code&lt;/h2&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;git clone &lt;a href=&#34;https://github.com/lilnate22/Crows-Nest.git&#34;&gt;https://github.com/lilnate22/Crows-Nest.git&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h2 id=&#34;edit-yamls&#34;&gt;Edit Yamls&lt;/h2&gt;
+
+&lt;h3 id=&#34;next-edit-the-yamls-deployment-yaml-file-with-the-relevant-config-params-in-the-environment-section&#34;&gt;Next Edit the &lt;strong&gt;yamls/deployment.yaml&lt;/strong&gt; file with the relevant config params in the environment section&lt;/h3&gt;
+
+&lt;div class=&#34;admonition note&#34;&gt;
+&lt;p class=&#34;admonition-title&#34;&gt;Note&lt;/p&gt;
+&lt;p&gt;for our example, we will use “Github” as the CROW_REPO. and the CROW_DNS will be “natefonseka.tech” and CROW_NODE_IP = “123.45.67&amp;rdquo;. Refer to the &lt;a href=&#34;https://lilnate22.github.io/#environment-variables&#34;&gt;Environment section&lt;/a&gt; for possible environment values and their purpose. and replace the above values with your values when following the example.&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;p&gt;after editing the yamls, deploy the deployment, and service&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;kubectl create -f yamls/deployment.yaml
+kubectl create -f yamls/service.yaml&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;You should now see crows-nest deployment, and a service running on a NodePort. we need to get this NodePort to test if everything is running OK&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;kubectl get svc crows-nest&lt;/p&gt;
+
+&lt;p&gt;curl {YOUR_NODE_IP}:{NODE_PORT}/healthCheck&lt;/p&gt;
+
+&lt;p&gt;following example: (curl 123.45.67:31250/healthCheck)&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;&lt;strong&gt;Congrats! you now have Crows-nest Running!&lt;/strong&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;configure-git-webhook&#34;&gt;Configure Git Webhook&lt;/h2&gt;
+
+&lt;p&gt;You can follow the guide for setting up the webhook [for GitHub Here]() or [gitlab here]()
+&lt;div class=&#34;admonition note&#34;&gt;
+&lt;p class=&#34;admonition-title&#34;&gt;Note&lt;/p&gt;
+&lt;p&gt;the payload url should be {YOUR_NODE_IP}:{NODE_PORT}&lt;/p&gt;
+
+&lt;p&gt;example: &lt;a href=&#34;http://123.45.67:31250&#34;&gt;http://123.45.67:31250&lt;/a&gt;&lt;/p&gt;
+&lt;/div&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;configure-docker-hub-integration&#34;&gt;Configure Docker Hub integration&lt;/h2&gt;
+
+&lt;p&gt;We will also need to set up Docker hub integration with github. which you can follow HERE. this will make it so that images are built automatically when branches are pushed.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;All Done! You should now have a project ready to go with crows nest&lt;/strong&gt;&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>
