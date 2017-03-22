@@ -7,6 +7,7 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>Released under the GPLv3 license</copyright>
+    <lastBuildDate>Wed, 22 Mar 2017 13:34:11 -0400</lastBuildDate>
     <atom:link href="https://lilnate22.github.io/Crows-Nest/getting-started/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
@@ -53,7 +54,11 @@ kubectl create -f yamls/service.yaml&lt;/p&gt;
 
 &lt;blockquote&gt;
 &lt;p&gt;kubectl get svc crows-nest&lt;/p&gt;
+&lt;/blockquote&gt;
 
+&lt;p&gt;&lt;img src=&#34;https://cdn-images-1.medium.com/max/1600/1*rfFLOND5BZlFSiiY3P_ZnQ.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;blockquote&gt;
 &lt;p&gt;curl {YOUR_NODE_IP}:{NODE_PORT}/healthCheck&lt;/p&gt;
 
 &lt;p&gt;following example: (curl 123.45.67:31250/healthCheck)&lt;/p&gt;
@@ -63,7 +68,7 @@ kubectl create -f yamls/service.yaml&lt;/p&gt;
 
 &lt;h2 id=&#34;configure-git-webhook&#34;&gt;Configure Git Webhook&lt;/h2&gt;
 
-&lt;p&gt;You can follow the guide for setting up the webhook [for GitHub Here]() or [gitlab here]()
+&lt;p&gt;You can follow the guide for setting up the webhook &lt;a href=&#34;https://support.hockeyapp.net/kb/third-party-bug-trackers-services-and-webhooks/how-to-set-up-a-webhook-in-github&#34;&gt;for GitHub Here&lt;/a&gt; or &lt;a href=&#34;https://docs.gitlab.com/ce/user/project/integrations/webhooks.html&#34;&gt;gitlab here&lt;/a&gt;
 &lt;div class=&#34;admonition note&#34;&gt;
 &lt;p class=&#34;admonition-title&#34;&gt;Note&lt;/p&gt;
 &lt;p&gt;the payload url should be {YOUR_NODE_IP}:{NODE_PORT}&lt;/p&gt;
@@ -76,6 +81,16 @@ kubectl create -f yamls/service.yaml&lt;/p&gt;
 &lt;p&gt;We will also need to set up Docker hub integration with github. which you can follow HERE. this will make it so that images are built automatically when branches are pushed.&lt;/p&gt;
 
 &lt;p&gt;&lt;strong&gt;All Done! You should now have a project ready to go with crows nest&lt;/strong&gt;&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>First Project</title>
+      <link>https://lilnate22.github.io/Crows-Nest/getting-started/first-project/</link>
+      <pubDate>Wed, 22 Mar 2017 13:34:11 -0400</pubDate>
+      
+      <guid>https://lilnate22.github.io/Crows-Nest/getting-started/first-project/</guid>
+      <description>&lt;p&gt;We will assume you have already completed your Getting Started section.&lt;/p&gt;
 </description>
     </item>
     
