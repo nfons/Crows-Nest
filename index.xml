@@ -2,20 +2,20 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Crows Nest</title>
-    <link>https://lilnate22.github.io/index.xml</link>
+    <link>https://lilnate22.github.io/Crows-Nest/index.xml</link>
     <description>Recent content on Crows Nest</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>Released under the GPLv3 license</copyright>
     <lastBuildDate>Wed, 08 Mar 2017 21:07:13 +0100</lastBuildDate>
-    <atom:link href="https://lilnate22.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://lilnate22.github.io/Crows-Nest/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>Crows Nest</title>
-      <link>https://lilnate22.github.io/</link>
+      <link>https://lilnate22.github.io/Crows-Nest/</link>
       <pubDate>Wed, 08 Mar 2017 21:07:13 +0100</pubDate>
       
-      <guid>https://lilnate22.github.io/</guid>
+      <guid>https://lilnate22.github.io/Crows-Nest/</guid>
       <description>
 
 &lt;p&gt;Crows Nest is a open source project aimed to do rapid CI/CD with Kubernetes by allowing developers to
@@ -118,10 +118,10 @@ and testing.&lt;/p&gt;
     
     <item>
       <title>Getting Started</title>
-      <link>https://lilnate22.github.io/getting-started/</link>
+      <link>https://lilnate22.github.io/Crows-Nest/getting-started/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>https://lilnate22.github.io/getting-started/</guid>
+      <guid>https://lilnate22.github.io/Crows-Nest/getting-started/</guid>
       <description>
 
 &lt;h2 id=&#34;pre-requisites&#34;&gt;Pre Requisites&lt;/h2&gt;
@@ -146,7 +146,7 @@ and testing.&lt;/p&gt;
 
 &lt;div class=&#34;admonition note&#34;&gt;
 &lt;p class=&#34;admonition-title&#34;&gt;Note&lt;/p&gt;
-&lt;p&gt;for our example, we will use “Github” as the CROW_REPO. and the CROW_DNS will be “natefonseka.tech” and CROW_NODE_IP = “123.45.67&amp;rdquo;. Refer to the &lt;a href=&#34;https://lilnate22.github.io/#environment-variables&#34;&gt;Environment section&lt;/a&gt; for possible environment values and their purpose. and replace the above values with your values when following the example.&lt;/p&gt;
+&lt;p&gt;for our example, we will use “Github” as the CROW_REPO. and the CROW_DNS will be “natefonseka.tech” and CROW_NODE_IP = “123.45.67&amp;rdquo;. Refer to the &lt;a href=&#34;https://lilnate22.github.io/Crows-Nest/#environment-variables&#34;&gt;Environment section&lt;/a&gt; for possible environment values and their purpose. and replace the above values with your values when following the example.&lt;/p&gt;
 &lt;/div&gt;
 
 &lt;p&gt;after editing the yamls, deploy the deployment, and service&lt;/p&gt;
@@ -188,10 +188,10 @@ kubectl create -f yamls/service.yaml&lt;/p&gt;
     
     <item>
       <title>License</title>
-      <link>https://lilnate22.github.io/license/</link>
+      <link>https://lilnate22.github.io/Crows-Nest/license/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>https://lilnate22.github.io/license/</guid>
+      <guid>https://lilnate22.github.io/Crows-Nest/license/</guid>
       <description>
 
 &lt;h1 id=&#34;gnu-general-public-license&#34;&gt;GNU GENERAL PUBLIC LICENSE&lt;/h1&gt;
