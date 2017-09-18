@@ -1,6 +1,7 @@
 from flask import Flask
 from flask import request
 import logging as log
+import yaml
 import sys
 import boto.route53
 import os
@@ -9,6 +10,7 @@ from repo_parser import getRepo
 from boto.route53.record import ResourceRecordSets
 from k8shelpers.kubehelper import kubecluster, createStack, deleteStack
 import json
+
 
 ZONE_ID = os.environ['CROW_ZONE_ID']  # k8s secret later
 DNS = os.environ['CROW_DNS']  # need to get from secret later
@@ -37,6 +39,7 @@ def main():
     data = request.json
     parsed_data = getRepo(CROW_REPO, data)
     parsed_data['url'] = parsed_data['branch'] + '.' + DNS
+    # get the contents of the crowsnest yaml
 
     # if the default port is something different, we need to change it.
     if parsed_data['image'] in PROJECT_PORTS:
