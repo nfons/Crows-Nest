@@ -9,6 +9,7 @@ from commentModule import comment
 from repo_parser import getRepo
 from boto.route53.record import ResourceRecordSets
 from k8shelpers.kubehelper import kubecluster, createStack, deleteStack
+from configParser import ConfigParser
 import json
 
 
@@ -19,6 +20,7 @@ AWS_REGION = os.getenv('AWS_REGION', 'us-west-2')
 CROW_REGISTRY = os.getenv('CROW_REGISTRY', None)
 KUBE_CONF = os.getenv('KUBECONF', None)
 CROW_REPO = os.getenv("CROW_REPO", "github")
+CROW_RAW_REPO = os.getenv("CROW_RAW_REPO", "https://raw.githubusercontent.com")
 PROJECT_PORTS = {}
 
 root = log.getLogger()
@@ -47,6 +49,9 @@ def main():
     else:
         parsed_data['port'] = 8080
 
+    # get the project specific params
+    configUrl = CROW_RAW_REPO + '/' + parsed_data['image'] + '/'+parsed_data['branch']+ '/crow.yaml'
+    config = ConfigParser(configUrl)
     if parsed_data['action'] == 'opened' or parsed_data['action'] == 'reopened':
         log.info('PR opened, creating DNS records + k8s deploy for branch' + parsed_data['branch'])
         opened(parsed_data['branch'], parsed_data['image'], parsed_data['port'])
