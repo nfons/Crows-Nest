@@ -2,3 +2,5 @@ Flask
 boto
 pykube
 requests
+PyYaml
+pycurl
