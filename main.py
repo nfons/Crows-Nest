@@ -107,7 +107,7 @@ def closed(branch, port=8080):
     delete deployments from this branch, as well as remove r53 record
     '''
     change_set = ResourceRecordSets(conn, ZONE_ID)
-    changes1 = change_set.add_change("DELETE", branch + '.' + DNS, type="A", ttl=60)
+    changes1 = change_set.add_change("DELETE", branch + '.' + DNS, type=DNS_TYPE, ttl=60)
     changes1.add_value(NODE_IP)
     change_set.commit()
 
