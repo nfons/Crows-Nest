@@ -1,4 +1,4 @@
-FROM python:3.6-slim
+FROM python:latest
 MAINTAINER Nate Fonseka
 COPY . /app
 WORKDIR /app
