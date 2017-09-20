@@ -8,7 +8,7 @@ import os
 from commentModule import comment
 from repo_parser import getRepo
 from boto.route53.record import ResourceRecordSets
-from k8shelpers.kubehelper import kubecluster, createStack, deleteStack
+from k8shelpers.kubehelper import kubecluster, createStack, deleteStack, updateStack
 from configParser import ConfigParser
 import json
 
@@ -45,17 +45,20 @@ def main():
 
     # get the project specific params
     configUrl = CROW_RAW_REPO + '/' + parsed_data['image'] + '/'+parsed_data['branch']+ '/crow.yaml'
-    config = ConfigParser(configUrl).getConfig()
-
-    port = config['port'] or 8080
-    zone = config['zone']
-    dns = config['dns']
-    ip = config['ip']
-    dns_type = config['recordType']
-
 
     # set the config params to our variables
     global NODE_IP, DNS, ZONE_ID, DNS_TYPE
+
+    config = ConfigParser(configUrl).getConfig()
+
+    port = config['port'] if 'port' in config else 8080
+    zone = config['zone'] if 'zone' in config else ZONE_ID
+    dns = config['dns'] if 'dns' in config else DNS
+    ip = config['ip'] if 'ip' in config else NODE_IP
+    dns_type = config['recordType'] if 'recordType' in config else 'A'
+
+
+
     NODE_IP = ip
     DNS = dns
     parsed_data['port'] = port
@@ -71,8 +74,9 @@ def main():
     elif parsed_data['action'] == 'closed':
         log.info('PR closed, deleting DNS records + k8s deploy for branch' + parsed_data['branch'])
         closed(parsed_data['branch'], parsed_data['port'])
-    elif parsed_data['action'] == 'updated':
+    elif parsed_data['action'] == 'updated' or parsed_data['action'] == 'synchronize':
         log.info('PR has been updated, updating deployment' + parsed_data['branch'])
+        resync(parsed_data['branch'], parsed_data['image'], parsed_data['port'])
     return 'OK'
 
 
@@ -120,6 +124,22 @@ def closed(branch, port=8080):
 
     # runs through the create stack process
     deleteStack(pod, KUBE_CONF)
+
+
+def resync(branch,image, port):
+    ## no need for r53, we just need to redeploy the deployment
+    pod = {
+        "name": branch,
+        "port": port
+    }
+
+    if (CROW_REGISTRY == None):
+        pod['image'] = image + ':' + branch
+    else:
+        pod['image'] = CROW_REGISTRY + image + ':' + branch
+
+    # update the deployment
+    updateStack(pod, KUBE_CONF)
 
 
 @app.route('/healthCheck')

@@ -33,6 +33,12 @@ class kubecluster:
         pykube.Deployment(self.api, deploy).delete()
         log.info('deleting deploy')
 
+    def updateDeployment(self):
+        # we simply need to call an update function
+        deploy = createDeployObject(self.pod)
+        pykube.Deployment(self.api, deploy).update()
+        log.info('Resyncing deployment')
+
     def deleteIngress(self):
         ingress = createIngressObject(self.pod)
         pykube.Ingress(self.api, ingress).delete()
@@ -76,3 +82,12 @@ def deleteStack(pod, KUBE_CONF):
     k8s.deleteDeploy()
 
 
+'''
+updates a k8s deployment.
+only used when PR is updated with new code, and resync is sent
+
+'''
+def updateStack(pod, KUBE_CONF):
+    log.info('updating k8s stack for : ' + pod["name"])
+    k8s = kubecluster(pod, KUBE_CONF)
+    k8s.updateDeployment()
