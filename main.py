@@ -69,7 +69,7 @@ def startCrow(parsed_data, config):
     parsed_data['port'] = port
 
 
-    parsed_data['url'] = parsed_data['branch'] + '.' + DNS
+    parsed_data['url'] = parsed_data['branch'] + '.' + dns
 
     if parsed_data['action'] == 'opened' or parsed_data['action'] == 'reopened':
         log.info('PR opened, creating DNS records + k8s deploy for branch' + parsed_data['branch'])
