@@ -41,15 +41,24 @@ conn = boto.route53.connect_to_region(AWS_REGION)
 def main():
     data = request.json
     parsed_data = getRepo(CROW_REPO, data)
-    # get the contents of the crowsnest yaml
+    configUrl = CROW_RAW_REPO + '/' + parsed_data['image'] + '/' + parsed_data['branch'] + '/crow.yaml'
+    config = ConfigParser(configUrl).getConfig()
+    startCrow(parsed_data, config)
+    return 'OK'
 
-    # get the project specific params
-    configUrl = CROW_RAW_REPO + '/' + parsed_data['image'] + '/'+parsed_data['branch']+ '/crow.yaml'
 
+@app.route('/pipeline', methods=['POST'])
+def pipeline_endpoint():
+    data = request.json
+    parsed_data = getRepo('pipeline', data)
+    configUrl = parsed_data['config']
+    config = ConfigParser(configUrl).getConfig()
+    startCrow(parsed_data, config)
+    return 'OK'
+
+def startCrow(parsed_data, config):
     # set the config params to our variables
     global NODE_IP, DNS, ZONE_ID, DNS_TYPE
-
-    config = ConfigParser(configUrl).getConfig()
 
     port = config['port'] if 'port' in config else 8080
     zone = config['zone'] if 'zone' in config else ZONE_ID
@@ -57,30 +66,24 @@ def main():
     ip = config['ip'] if 'ip' in config else NODE_IP
     dns_type = config['recordType'] if 'recordType' in config else 'A'
 
-
-
-    NODE_IP = ip
-    DNS = dns
     parsed_data['port'] = port
-    ZONE_ID = zone
-    DNS_TYPE = dns_type
+
 
     parsed_data['url'] = parsed_data['branch'] + '.' + DNS
 
     if parsed_data['action'] == 'opened' or parsed_data['action'] == 'reopened':
         log.info('PR opened, creating DNS records + k8s deploy for branch' + parsed_data['branch'])
-        opened(parsed_data['branch'], parsed_data['image'], parsed_data['port'])
+        opened(parsed_data['branch'], parsed_data['image'], parsed_data['port'], zone, dns, dns_type, ip)
         comment(parsed_data)
     elif parsed_data['action'] == 'closed':
         log.info('PR closed, deleting DNS records + k8s deploy for branch' + parsed_data['branch'])
-        closed(parsed_data['branch'], parsed_data['port'])
+        closed(parsed_data['branch'], parsed_data['port'], zone, dns, dns_type, ip)
     elif parsed_data['action'] == 'updated' or parsed_data['action'] == 'synchronize':
         log.info('PR has been updated, updating deployment' + parsed_data['branch'])
         resync(parsed_data['branch'], parsed_data['image'], parsed_data['port'])
-    return 'OK'
 
 
-def opened(branch, image, port=8080):
+def opened(branch, image, port=8080, ZONE_ID=ZONE_ID, DNS=DNS, DNS_TYPE='A', NODE_IP=NODE_IP):
     '''
      We will 1st need to create a deployment with branch image
      then we will need to create a svc for it + ingress rules
@@ -105,7 +108,7 @@ def opened(branch, image, port=8080):
     createStack(pod, KUBE_CONF)
 
 
-def closed(branch, port=8080):
+def closed(branch, port=8080, ZONE_ID=ZONE_ID, DNS=DNS, DNS_TYPE='A', NODE_IP=NODE_IP):
     '''
     We will need to get ingress, and then remove the ingress rule for this dns.
     delete deployments from this branch, as well as remove r53 record

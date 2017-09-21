@@ -28,8 +28,22 @@ def github(payload):
     return object
 
 
+def pipeline(payload):
+    object = {}
+    branch = payload['branch']
+    image = payload['image']
+    action = payload['action']
+    object["comment_url"] = payload["comment_url"] if 'comment_url' in payload else ''
+    object['action'] = action
+    object['branch'] = branch
+    object['image'] = image
+    object['config'] = payload['config'] if 'config' in payload else ''
+    return object
+
 def getRepo(type, payload):
     if type == 'github':
         return github(payload)
-    else:
+    elif type == 'gitlab':
         return gitlab(payload)
+    else:
+        return pipeline(payload)
