@@ -17,7 +17,7 @@ Crows Nest will:
 
 ## Get started
 
-1. edit the `yamls/deployment.yaml` file with relevant environment values
+1. edit the `yamls/deployment.yaml` file with relevant environment values or add a `crow.yaml` in your git repo
 2. `kubectl create -f yaml/deployment.yaml`
 3. `kubectl create -f yaml/service.yaml`
 
