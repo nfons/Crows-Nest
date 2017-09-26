@@ -74,7 +74,8 @@ def startCrow(parsed_data, config):
     if parsed_data['action'] == 'opened' or parsed_data['action'] == 'reopened':
         log.info('PR opened, creating DNS records + k8s deploy for branch' + parsed_data['branch'])
         opened(parsed_data['branch'], parsed_data['image'], parsed_data['port'], zone, dns, dns_type, ip)
-        comment(parsed_data)
+        if ('comment_url' in parsed_data):
+            comment(parsed_data)
     elif parsed_data['action'] == 'closed':
         log.info('PR closed, deleting DNS records + k8s deploy for branch' + parsed_data['branch'])
         closed(parsed_data['branch'], parsed_data['port'], zone, dns, dns_type, ip)
